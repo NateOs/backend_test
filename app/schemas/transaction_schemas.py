@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from cryptography.fernet import Fernet
 from cryptography.fernet import InvalidToken
+from enum import Enum
 
 key = Fernet.generate_key()
 cipher_suite = Fernet(key)
@@ -14,12 +15,15 @@ def decrypt_name(encrypted_name: str) -> str:
     decrypted_name = cipher_suite.decrypt(encrypted_name.encode())
     return decrypted_name.decode()
 
+class TransactionType(str, Enum):
+    credit = 'credit'
+    debit = 'debit'
 class TransactionCreate(BaseModel):
     user_id: int
     full_name: str
     transaction_date: datetime = datetime.now()
-    transaction_amount: float
-    transaction_type: str # 'credit' or 'debit'
+    transaction_amount: float = Field(..., gt=0)
+    transaction_type: TransactionType
     
     def encrypt_full_name(self) -> str:
         return encrypt_name(self.full_name)
