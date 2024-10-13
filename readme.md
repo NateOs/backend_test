@@ -29,11 +29,11 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
 - [x] Add a simple encryption mechanism using a Python library (e.g., Fernet or similar).
 
 ### Transaction Analytics Endpoint
-- [ ] Implement an endpoint where, given a `user_id`, the API returns:
-  - [ ] The user's average transaction value.
-  - [ ] The day they made the highest number of transactions.
+- [x] Implement an endpoint where, given a `user_id`, the API returns:
+  - [x] The user's average transaction value.
+  - [x] The day they made the highest number of transactions.
   - (Optional) The total value of debit and credit transactions over a specific period.
-- [ ] Optimize this endpoint for performance.
+- [] Optimize this endpoint for performance.
 
 ### Asynchronous Processing
 - [ ] When a transaction is added, consider processing implications (e.g., updating user statistics, alerting relevant systems, or recalculating credit scores).
