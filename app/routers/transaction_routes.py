@@ -29,11 +29,13 @@ def read_transactions(skip: int = 0, limit: int = 10, db: Session = Depends(get_
     """
     return get_transactions(db, skip=skip, limit=limit)
 
+from app.redis_client import redis_client
+import json
 @router.get("/transactions/", response_model=List[TransactionResponse])
 def read_transactions_by_user_id(user_id: int, db: Session = Depends(get_db)):
     """
     Retrieve a list of transactions from the database for a specific user.
-
+    Transactions are cached for 1 hour to improve performance.
     Parameters:
     user_id (int): The ID of the user whose transactions to retrieve.
     db (Session): The database session dependency.
@@ -41,7 +43,16 @@ def read_transactions_by_user_id(user_id: int, db: Session = Depends(get_db)):
     Returns:
     List[TransactionResponse]: A list of transaction records for the given user.
     """
-    return get_transactions(db, user_id=user_id)
+    cache_key = f"user_transactions:{user_id}"
+    cached_transactions = redis_client.get(cache_key)
+
+    if cached_transactions:
+        return json.loads(cached_transactions)
+
+    transactions = get_transactions(db, user_id=user_id)
+    redis_client.setex(cache_key, 3600, json.dumps([transaction.__dict__ for transaction in transactions]))
+
+    return transactions
 
 @router.get("/transactions/{transaction_id}", response_model=TransactionResponse)
 def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
