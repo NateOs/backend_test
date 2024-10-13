@@ -33,14 +33,14 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
   - [x] The user's average transaction value.
   - [x] The day they made the highest number of transactions.
   - (Optional) The total value of debit and credit transactions over a specific period.
-- [] Optimize this endpoint for performance.
+- [x] Optimize this endpoint for performance.
 
 ### Asynchronous Processing
 - [ ] When a transaction is added, consider processing implications (e.g., updating user statistics, alerting relevant systems, or recalculating credit scores).
 - [ ] Strategize how to enhance system responsiveness and efficiency.
 
 ### Caching Mechanism
-- [ ] Implement caching (e.g., using Redis) for:
+- [x] Implement caching (e.g., using Redis) for:
   - Frequent read operations like fetching transaction history.
   - Calculating transaction analytics.
 - [ ] Ensure that stale data is refreshed periodically.
@@ -62,3 +62,7 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
 ## Submission
 - [ ] Initiate a new repository on GitHub.
 - [ ] Commit your code, tests, and documentation.
+import redis
+
+# Create a Redis client
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
