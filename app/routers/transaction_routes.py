@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -86,13 +86,14 @@ def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
     return transaction_response
 
 @router.post("/transactions/", response_model=TransactionResponse)
-def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
+def create_transaction(transaction: TransactionCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     """
     Create a new transaction in the database.
 
     Parameters:
     transaction (TransactionCreate): The transaction data to create.
     db (Session): The database session dependency.
+    background_tasks (BackgroundTasks): The background tasks dependency.
 
     Returns:
     TransactionResponse: The created transaction record.
@@ -102,7 +103,7 @@ def create_transaction(transaction: TransactionCreate, db: Session = Depends(get
     transaction_data['full_name'] = transaction.encrypt_full_name()
 
     # Create the transaction using the encrypted data
-    created_transaction = create_transaction_crud(db, transaction=transaction_data)
+    created_transaction = create_transaction_crud(db, transaction=transaction_data, background_tasks=background_tasks)
 
     # Return the created transaction
     return TransactionResponse(**created_transaction)
