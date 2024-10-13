@@ -1,8 +1,20 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.models.models import Transaction
 from app.schemas.transaction_schemas import TransactionCreate, TransactionResponse
 
+# background tasks
+def update_user_statistics(transaction_id: int):
+    # Logic to update user statistics
+    pass
+
+def send_notification(transaction_id: int):
+    # Logic to send a notification
+    pass
+
+def recalculate_credit_score(transaction_id: int):
+    # Logic to recalculate credit score
+    pass
 
 def get_transactions(db: Session, skip: int = 0, limit: int = 10, user_id: int = None):
     """
@@ -38,22 +50,30 @@ def get_transaction(db: Session, transaction_id: int):
     """
     return db.query(Transaction).filter(Transaction.id == transaction_id).first()
 
-def create_transaction(db: Session, transaction: dict):
+from fastapi import BackgroundTasks
+
+def create_transaction(db: Session, transaction: dict, background_tasks: BackgroundTasks):
     """
     Create a new transaction in the database.
 
     Parameters:
     db (Session): The database session.
     transaction (dict): The transaction data, including the encrypted full_name.
+    background_tasks (BackgroundTasks): The background tasks dependency.
 
     Returns:
     dict: The created transaction data.
     """
-    # Assuming you have a Transaction model
     db_transaction = Transaction(**transaction)
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)
+
+    # Run background tasks after the transaction is created
+    background_tasks.add_task(update_user_statistics, db_transaction.id)
+    background_tasks.add_task(send_notification, db_transaction.id)
+    background_tasks.add_task(recalculate_credit_score, db_transaction.id)
+
     return db_transaction.__dict__
 
 

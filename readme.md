@@ -36,14 +36,14 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
 - [x] Optimize this endpoint for performance.
 
 ### Asynchronous Processing
-- [ ] When a transaction is added, consider processing implications (e.g., updating user statistics, alerting relevant systems, or recalculating credit scores).
+- [x] When a transaction is added, consider processing implications (e.g., updating user statistics, alerting relevant systems, or recalculating credit scores).
 - [ ] Strategize how to enhance system responsiveness and efficiency.
 
 ### Caching Mechanism
 - [x] Implement caching (e.g., using Redis) for:
   - Frequent read operations like fetching transaction history.
   - Calculating transaction analytics.
-- [ ] Ensure that stale data is refreshed periodically.
+- [x] Ensure that stale data is refreshed periodically.
 
 ### Testing with `pytest`
 - [ ] Write unit tests for your endpoints using `pytest`.
