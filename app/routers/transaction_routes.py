@@ -4,8 +4,13 @@ from typing import List
 
 from app.database import get_db
 from app.schemas.transaction_schemas import TransactionCreate, TransactionResponse
-from app.crud.transaction_crud import get_transactions, get_transaction, create_transaction, update_transaction, delete_transaction
-
+from app.crud.transaction_crud import (
+    get_transactions,
+    get_transaction,
+    create_transaction as create_transaction_crud,
+    update_transaction as update_transaction_crud, 
+    delete_transaction as delete_transaction_crud
+)
 router = APIRouter()
 
 
@@ -50,7 +55,24 @@ def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
     Returns:
     TransactionResponse: The transaction record with the given ID.
     """
-    return get_transaction(db, transaction_id=transaction_id)
+    transaction = get_transaction(db, transaction_id=transaction_id)
+    if transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    
+    # Manually map the Transaction object to TransactionResponse
+    transaction_response = TransactionResponse(
+        id=transaction.id,
+        user_id=transaction.user_id,
+        full_name=transaction.full_name,  # Pass the encrypted name directly
+        transaction_date=transaction.transaction_date,
+        transaction_amount=transaction.transaction_amount,
+        transaction_type=transaction.transaction_type
+    )
+    
+    # Decrypt the full_name before returning
+    transaction_response.full_name = transaction_response.decrypt_full_name()
+    
+    return transaction_response
 
 @router.post("/transactions/", response_model=TransactionResponse)
 def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
@@ -64,7 +86,15 @@ def create_transaction(transaction: TransactionCreate, db: Session = Depends(get
     Returns:
     TransactionResponse: The created transaction record.
     """
-    return create_transaction(db, transaction=transaction)
+    # Encrypt the full_name before creating the transaction
+    transaction_data = transaction.model_dump()
+    transaction_data['full_name'] = transaction.encrypt_full_name()
+
+    # Create the transaction using the encrypted data
+    created_transaction = create_transaction_crud(db, transaction=transaction_data)
+
+    # Return the created transaction
+    return TransactionResponse(**created_transaction)
 
 @router.put("/transactions/{transaction_id}", response_model=TransactionResponse)
 def update_transaction(transaction_id: int, transaction: TransactionCreate, db: Session = Depends(get_db)):
@@ -79,7 +109,7 @@ def update_transaction(transaction_id: int, transaction: TransactionCreate, db: 
     Returns:
     TransactionResponse: The updated transaction record.
     """
-    return update_transaction(db, transaction_id=transaction_id, transaction=transaction)
+    return update_transaction_crud(db, transaction_id=transaction_id, transaction=transaction)
 
 @router.delete("/transactions/{transaction_id}", response_model=TransactionResponse)
 def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
@@ -93,4 +123,4 @@ def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
     Returns:
     TransactionResponse: The deleted transaction record.
     """
-    return delete_transaction(db, transaction_id=transaction_id)
+    return delete_transaction_crud(db, transaction_id=transaction_id)

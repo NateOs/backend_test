@@ -38,21 +38,23 @@ def get_transaction(db: Session, transaction_id: int):
     """
     return db.query(Transaction).filter(Transaction.id == transaction_id).first()
 
-def create_transaction(db: Session, transaction: TransactionCreate):
+def create_transaction(db: Session, transaction: dict):
     """
     Create a new transaction in the database.
 
     Parameters:
-    db (Session): The database session dependency.
-    transaction (TransactionCreate): The transaction data to create.
+    db (Session): The database session.
+    transaction (dict): The transaction data, including the encrypted full_name.
+
     Returns:
-    TransactionResponse: The created transaction record.
+    dict: The created transaction data.
     """
-    db_transaction = Transaction(**transaction.dict())
+    # Assuming you have a Transaction model
+    db_transaction = Transaction(**transaction)
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)
-    return db_transaction
+    return db_transaction.__dict__
 
 
 def update_transaction(db: Session, transaction_id: int, transaction: TransactionCreate):

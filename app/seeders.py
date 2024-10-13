@@ -4,7 +4,6 @@ from sqlalchemy.orm import Session
 from app.models.models import Transaction
 from app.database import SessionLocal
 import datetime
-
 # Sample data to be seeded
 initial_data = [
     {
