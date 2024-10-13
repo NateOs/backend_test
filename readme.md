@@ -7,6 +7,73 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
 - Asynchronous operations
 - Testing
 
+## Design and architectural decisions.
+- The goal of the application was to build a basic transactions backend application that will accept, user with an id, and their login details, whilst anonymizing the user's name.
+- I thought  perhaps creating a users table help with analytics, but realised that wouldn't be necessary.
+- In terms, of folder structure, I considered what is common to me, but also referenced what FastAPI docs mentioned.Tends out its pretty neat.
+- For the sake of scalability, docker is a good choice as it can be orchestrated with tooling like kubernetes to serve massive loads.
+
+## Potential strategies for scaling the solution for a large user base, and any trade-offs considered.
+
+## Setup and Run
+## With docker
+
+- Ensure Docker is Installed:
+Make sure Docker is installed on your machine. You can download it from Docker's official website.
+
+- Build the Docker Image:
+Navigate to the project directory and build the Docker image using the Dockerfile.
+docker build -t fido-backend .
+
+- Run the Docker Container:
+Use Docker Compose to run the application. This will start the FastAPI application along with any other services defined in the docker-compose.yml file, such as the database and Redis.
+docker-compose up
+
+- Access the API:
+Once the container is running, open your web browser and navigate to http://localhost:8000 to access the API. You can also view the interactive API documentation at http://localhost:8000/docs.
+
+- Run Tests (Optional):
+If you want to run tests inside the Docker container, you can execute a command in the running container. First, find the container ID or name using docker ps, then run:
+docker exec -it <container_id_or_name> pytest
+
+
+## Without docker
+
+- Clone the Repository:
+First, clone the repository to your local machine using Git.
+git clone <repository-url>
+cd <repository-directory>
+
+- Set Up a Virtual Environment:
+Create and activate a virtual environment to manage your project's dependencies.
+python3 -m venv venv
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+
+- Install Dependencies:
+Install the required Python packages using pip.
+pip install -r requirements.txt
+
+- Configure Environment Variables:
+Ensure you have a .env file in the project root directory with the necessary environment variables. For example:
+DATABASE_URL=postgresql://user:password@localhost/dbname
+REDIS_URL=redis://localhost:6379/0
+
+- Run Database Migrations:
+Use Alembic to apply database migrations.
+alembic upgrade head
+
+- Start the FastAPI Application:
+Use Uvicorn to run the FastAPI application.
+uvicorn app.main:app --reload
+
+- Access the API:
+Open your web browser and navigate to http://localhost:8000 to access the API. You can also view the interactive API documentation at http://localhost:8000/docs.
+
+- Run Tests (Optional):
+To ensure everything is working correctly, run the tests using pytest.
+pytest
+
+
 ## Task Details
 
 ### API Development with FastAPI
@@ -54,7 +121,7 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
 - [ ] Ensure the Docker container runs the application smoothly and integrates well with any database or external systems.
 
 ### Documentation
-- [ ] Compile a `README` file detailing:
+- [x] Compile a `README` file detailing:
   - Setup and run instructions.
   - Your design and architectural decisions.
   - Potential strategies for scaling the solution for a large user base, and any trade-offs considered.
