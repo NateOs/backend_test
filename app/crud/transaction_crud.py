@@ -7,15 +7,15 @@ from fastapi import BackgroundTasks
 # background tasks
 def update_user_statistics(transaction_id: int):
     # Logic to update user statistics
-    pass
+    print("Updating user statistics for transaction ID: ", transaction_id)
 
 def send_notification(transaction_id: int):
     # Logic to send a notification
-    pass
+    print("Sending notification for transaction ID: ", transaction_id)
 
 def recalculate_credit_score(transaction_id: int):
     # Logic to recalculate credit score
-    pass
+    print("Recalculating credit score for transaction ID: ", transaction_id)
 
 def get_transactions(db: Session, skip: int = 0, limit: int = 10, user_id: int = None):
     """

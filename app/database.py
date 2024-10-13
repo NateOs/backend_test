@@ -8,7 +8,7 @@ print("Environment variables loaded.")
 
 
 # Create an engine
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL is None:
     print("DATABASE_URL not found in environment.")
