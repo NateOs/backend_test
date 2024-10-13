@@ -46,11 +46,11 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
 - [x] Ensure that stale data is refreshed periodically.
 
 ### Testing with `pytest`
-- [ ] Write unit tests for your endpoints using `pytest`.
+- [x] Write unit tests for your endpoints using `pytest`.
 - [ ] Ensure tests cover primary use cases and edge cases.
 
 ### Containerization
-- [ ] Draft a `Dockerfile` to containerize your FastAPI application.
+- [x] Draft a `Dockerfile` to containerize your FastAPI application.
 - [ ] Ensure the Docker container runs the application smoothly and integrates well with any database or external systems.
 
 ### Documentation
@@ -60,8 +60,8 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
   - Potential strategies for scaling the solution for a large user base, and any trade-offs considered.
 
 ## Submission
-- [ ] Initiate a new repository on GitHub.
-- [ ] Commit your code, tests, and documentation.
+- [x] Initiate a new repository on GitHub.
+- [x] Commit your code, tests, and documentation.
 import redis
 
 # Create a Redis client
