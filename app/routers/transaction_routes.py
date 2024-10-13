@@ -15,19 +15,18 @@ router = APIRouter()
 
 
 @router.get("/transactions/", response_model=List[TransactionResponse])
-def read_transactions(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def read_transactions(user_id: int, db: Session = Depends(get_db)):
     """
-    Retrieve a list of transactions from the database.
+    Retrieve a list of transactions from the database for a specific user.
 
     Parameters:
-    skip (int): The number of records to skip for pagination. Default is 0.
-    limit (int): The maximum number of records to return. Default is 10.
+    user_id (int): The ID of the user whose transactions to retrieve.
     db (Session): The database session dependency.
 
     Returns:
-    List[TransactionResponse]: A list of transaction records.
+    List[TransactionResponse]: A list of transaction records for the given user.
     """
-    return get_transactions(db, skip=skip, limit=limit)
+    return get_transactions(db, user_id=user_id)
 
 from app.redis_client import redis_client
 import json

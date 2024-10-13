@@ -31,8 +31,9 @@ def get_transactions(db: Session, skip: int = 0, limit: int = 10, user_id: int =
     """
     query = db.query(Transaction)
 
-    if user_id:
+    if user_id is not None:
         query = query.filter(Transaction.user_id == user_id)
+        return query.all()
 
     return query.offset(skip).limit(limit).all()
 
