@@ -46,8 +46,8 @@ Develop a RESTful API using FastAPI, focusing on transactions and user interacti
 - [x] Ensure that stale data is refreshed periodically.
 
 ### Testing with `pytest`
-- [ ] Write unit tests for your endpoints using `pytest`.
-- [ ] Ensure tests cover primary use cases and edge cases.
+- [x] Write unit tests for your endpoints using `pytest`.
+- [x] Ensure tests cover primary use cases and edge cases.
 
 ### Containerization
 - [ ] Draft a `Dockerfile` to containerize your FastAPI application.
