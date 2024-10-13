@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -15,19 +15,18 @@ router = APIRouter()
 
 
 @router.get("/transactions/", response_model=List[TransactionResponse])
-def read_transactions(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def read_transactions(user_id: int, db: Session = Depends(get_db)):
     """
-    Retrieve a list of transactions from the database.
+    Retrieve a list of transactions from the database for a specific user.
 
     Parameters:
-    skip (int): The number of records to skip for pagination. Default is 0.
-    limit (int): The maximum number of records to return. Default is 10.
+    user_id (int): The ID of the user whose transactions to retrieve.
     db (Session): The database session dependency.
 
     Returns:
-    List[TransactionResponse]: A list of transaction records.
+    List[TransactionResponse]: A list of transaction records for the given user.
     """
-    return get_transactions(db, skip=skip, limit=limit)
+    return get_transactions(db, user_id=user_id)
 
 from app.redis_client import redis_client
 import json
@@ -86,13 +85,14 @@ def read_transaction(transaction_id: int, db: Session = Depends(get_db)):
     return transaction_response
 
 @router.post("/transactions/", response_model=TransactionResponse)
-def create_transaction(transaction: TransactionCreate, db: Session = Depends(get_db)):
+def create_transaction(transaction: TransactionCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     """
     Create a new transaction in the database.
 
     Parameters:
     transaction (TransactionCreate): The transaction data to create.
     db (Session): The database session dependency.
+    background_tasks (BackgroundTasks): The background tasks dependency.
 
     Returns:
     TransactionResponse: The created transaction record.
@@ -102,7 +102,7 @@ def create_transaction(transaction: TransactionCreate, db: Session = Depends(get
     transaction_data['full_name'] = transaction.encrypt_full_name()
 
     # Create the transaction using the encrypted data
-    created_transaction = create_transaction_crud(db, transaction=transaction_data)
+    created_transaction = create_transaction_crud(db, transaction=transaction_data, background_tasks=background_tasks)
 
     # Return the created transaction
     return TransactionResponse(**created_transaction)

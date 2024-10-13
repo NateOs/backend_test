@@ -1,7 +1,7 @@
-
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, CheckConstraint
 from sqlalchemy.sql import func
 from app.database import Base
+
 
 class Transaction(Base):
     __tablename__ = 'transactions'
@@ -12,3 +12,7 @@ class Transaction(Base):
     transaction_date = Column(DateTime(timezone=True), server_default=func.now())
     transaction_amount = Column(Float, nullable=False)
     transaction_type = Column(String, nullable=False)  # This will store 'credit' or 'debit'
+
+    __table_args__ = (
+        CheckConstraint("transaction_type IN ('credit', 'debit')", name='check_transaction_type'),
+    )

@@ -2,6 +2,7 @@ from fastapi import HTTPException, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.models.models import Transaction
 from app.schemas.transaction_schemas import TransactionCreate, TransactionResponse
+from fastapi import BackgroundTasks
 
 # background tasks
 def update_user_statistics(transaction_id: int):
@@ -31,8 +32,9 @@ def get_transactions(db: Session, skip: int = 0, limit: int = 10, user_id: int =
     """
     query = db.query(Transaction)
 
-    if user_id:
+    if user_id is not None:
         query = query.filter(Transaction.user_id == user_id)
+        return query.all()
 
     return query.offset(skip).limit(limit).all()
 
@@ -50,7 +52,6 @@ def get_transaction(db: Session, transaction_id: int):
     """
     return db.query(Transaction).filter(Transaction.id == transaction_id).first()
 
-from fastapi import BackgroundTasks
 
 def create_transaction(db: Session, transaction: dict, background_tasks: BackgroundTasks):
     """
