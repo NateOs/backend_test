@@ -110,6 +110,31 @@ def test_retrieve_transaction_history_with_transactions():
 # Update a Transaction Record
 
 # Successfully update an existing transaction with valid data.
+def test_update_transaction_valid_data():
+    # create a sample transaction
+    response = client.post(
+        "/transactions/",
+        json={
+            "user_id": 1,
+            "transaction_type": "credit",
+            "transaction_amount": 1000,
+            "full_name": "John Doe"
+        }
+    )
+    transaction_id = response.json()["id"]
+
+    # update the transaction
+    response = client.put(
+        f"/transactions/{transaction_id}",
+        json={
+            "transaction_type": "debit",
+            "transaction_amount": 500,
+            "full_name": "Jane Doe"
+        }
+    )
+    assert response.json()["transaction_type"] == "debit"
+    assert response.json()["transaction_amount"] == 500
+    assert response.json()["full_name"] == "Jane Doe"
 
 # Update only specific fields of a transaction.
 
