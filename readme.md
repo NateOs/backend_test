@@ -36,6 +36,9 @@ Once the container is running, open your web browser and navigate to http://loca
 If you want to run tests inside the Docker container, you can execute a command in the running container. First, find the container ID or name using docker ps, then run:
 docker exec -it <container_id_or_name> pytest
 
+## To run test:
+`docker exec -it <containername or id> pytest`
+
 
 ## Without docker
 
